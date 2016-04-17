@@ -22,6 +22,12 @@ class ParamsBuilderTest(BaseUnitTest):
     self.eq(p["command"], "message")
     self.eq(d["action"], "enter_room")
 
+  def test_build_exit_room_params(self):
+    p = json.loads(self.pb.build_exit_room_params())
+    d = json.loads(p["data"])
+    self.eq(p["command"], "message")
+    self.eq(d["action"], "exit_room")
+
   def test_build_my_params(self):
     p = json.loads(self.pb.build_my_params("c"))
     d = json.loads(p["data"])
