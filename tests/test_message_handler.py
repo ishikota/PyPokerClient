@@ -28,6 +28,14 @@ class MessageHandlerTest(unittest.TestCase):
 
     self.assertEqual(self.mh.WAITING_PLAYER_ARRIVAL, next_state)
 
+  def test_switch_action_msg_arrival(self):
+    ws = self.websocket_spy()
+    next_state = self.mh.switch_action_by_message(\
+        self.arrival(), self.mh.WAITING_PLAYER_ARRIVAL, ws)
+
+    self.assertEqual(self.mh.WAITING_PLAYER_ARRIVAL, next_state)
+
+
   def test_retry_request_if_needed(self):
 
     # do not retry
