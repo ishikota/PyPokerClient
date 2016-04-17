@@ -3,8 +3,7 @@ import json
 from mock import Mock
 
 from nose.tools import *
-from poker_client.wanted_phase_handler import WantedPhaseHandler
-from poker_client.params_builder import ParamsBuilder
+from poker_client.server_communication.wanted_phase_handler import WantedPhaseHandler
 
 class WantedPhaseHandlerTest(BaseUnitTest):
 

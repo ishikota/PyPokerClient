@@ -2,7 +2,7 @@ from base_unittest import BaseUnitTest
 import json
 from nose.tools import *
 
-from poker_client.params_builder import ParamsBuilder
+from poker_client.server_communication.params_builder import ParamsBuilder
 
 class ParamsBuilderTest(BaseUnitTest):
 

@@ -2,7 +2,7 @@ from base_unittest import BaseUnitTest
 from mock import Mock
 
 from nose.tools import *
-from poker_client.lobby_helper import LobbyHelper
+from poker_client.server_communication.lobby_helper import LobbyHelper
 
 class LobbyHelperTest(BaseUnitTest):
 
