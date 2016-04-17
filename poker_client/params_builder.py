@@ -9,6 +9,9 @@ class ParamsBuilder:
   def build_subscribe_params(self):
     return self.build_my_params("subscribe")
 
+  def build_enter_room_params(self):
+    return self.build_message_params("enter_room")
+
   def build_message_params(self, action, data={}):
     return self.build_my_params("message", action, data)
 

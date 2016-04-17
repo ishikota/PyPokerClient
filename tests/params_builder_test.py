@@ -16,6 +16,12 @@ class ParamsBuilderTest(unittest.TestCase):
     p = json.loads(self.pb.build_subscribe_params())
     self.assertEqual(p["command"], "subscribe")
 
+  def test_build_enter_room_params(self):
+    p = json.loads(self.pb.build_enter_room_params())
+    d = json.loads(p["data"])
+    self.assertEqual(p["command"], "message")
+    self.assertEqual(d["action"], "enter_room")
+
   def test_build_my_params(self):
     p = json.loads(self.pb.build_my_params("c"))
     d = json.loads(p["data"])
