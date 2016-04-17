@@ -12,11 +12,21 @@ class MessageHandlerTest(unittest.TestCase):
     self.pb = self.params_builder_mock()
     self.mh = MessageHandler(self.pb)
 
-  def test_switch_action_ping(self):
-    for state in range(3):
-      ws = self.websocket_spy()
-      next_state = self.mh.switch_action_by_message(self.ping(), state, ws)
-      self.assertEqual(state, next_state)
+  def test_switch_action_msg_connecting(self):
+    ws = self.websocket_spy()
+    next_state = self.mh.switch_action_by_message(\
+        self.confirm_subscription(), self.mh.CONNECTING, ws)
+    args = ws.send.call_args_list[0][0][0]
+
+    self.assertEqual(self.mh.WAITING_DOOR_OPEN, next_state)
+    self.assertEqual(self.mock_enter_room_msg(), args)
+
+  def test_switch_action_msg_waiting_door_open(self):
+    ws = self.websocket_spy()
+    next_state = self.mh.switch_action_by_message(\
+        self.welcome(), self.mh.WAITING_DOOR_OPEN, ws)
+
+    self.assertEqual(self.mh.WAITING_PLAYER_ARRIVAL, next_state)
 
   def test_retry_request_if_needed(self):
 
@@ -41,12 +51,12 @@ class MessageHandlerTest(unittest.TestCase):
     self.assertFalse(self.mh.type_confirm_subscription(self.ping()))
 
   def test_type_welcome(self):
-    self.assertTrue(self.mh.type_welcome(self.welcome()))
-    self.assertFalse(self.mh.type_welcome(self.arrival()))
+    self.assertTrue(self.mh.type_welcome(self.welcome()["message"]))
+    self.assertFalse(self.mh.type_welcome(self.arrival()["message"]))
 
   def test_type_arrival(self):
-    self.assertTrue(self.mh.type_player_arrival(self.arrival()))
-    self.assertFalse(self.mh.type_player_arrival(self.welcome()))
+    self.assertTrue(self.mh.type_player_arrival(self.arrival()["message"]))
+    self.assertFalse(self.mh.type_player_arrival(self.welcome()["message"]))
 
   def test_forward_state(self):
     self.assertEqual(2, self.mh.forward_state(1))
@@ -59,10 +69,10 @@ class MessageHandlerTest(unittest.TestCase):
     return json.loads(r'{"identifier":"{\"channel\":\"RoomChannel\"}","type":"confirm_subscription"}')
 
   def welcome(self):
-    return json.loads(r'{"phase":"member_wanted", "type":"welcome"}')
+    return json.loads(r'{"identifier":"{\"channel\":\"RoomChannel\"}", "message" : { "phase":"member_wanted", "type":"welcome"} }')
 
   def arrival(self):
-    return json.loads(r'{"phase":"member_wanted", "type":"arrival", "message":"TODO"}')
+    return json.loads(r'{"identifier":"{\"channel\":\"RoomChannel\"}", "message" : { "phase":"member_wanted", "type":"arrival", "message":"TODO"} }')
 
   def websocket_spy(self):
     websocket = Mock()
