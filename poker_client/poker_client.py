@@ -44,9 +44,11 @@ def select_room():
 
 
 player = registration()
-room = create_room()
 show_rooms()
-credencial = "a" * 22  # TODO should receive when player is created
+flg = raw_input("Create new room? (y/n)")
+if flg == 'y':
+  create_room()
+credential = "a" * 22  # TODO should receive when player is created
 room_id = select_room()
 websocket = WebSocketWrapper(ws_host, room_id, player["id"], credential)
 websocket.run_forever()
