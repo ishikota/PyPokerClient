@@ -2,8 +2,8 @@ from http_client import CustomHttpClient
 
 class LobbyHelper:
 
-  def __init__(self, domain):
-    self.c = CustomHttpClient()
+  def __init__(self, domain, http_client):
+    self.c = http_client
     self.domain = domain
 
   def show_rooms(self, status=''):
