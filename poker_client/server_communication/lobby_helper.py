@@ -10,6 +10,13 @@ class LobbyHelper:
     params = { 'status' : status }
     return self.c.get(self.domain + 'rooms', params)
 
+  def login(self, pid):
+    response = self.c.get(self.domain + 'players/' + str(pid))
+    if response.status_code == 200:
+      return { 'status' : True, 'player' : response.json() }
+    else:
+      return { 'status' : False }
+
   def create_player(self, name):
     params = { 'player' : { 'name' : name } }
     r = self.c.post(self.domain + 'players', params)

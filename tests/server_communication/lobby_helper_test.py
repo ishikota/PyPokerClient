@@ -17,6 +17,27 @@ class LobbyHelperTest(BaseUnitTest):
     expected_path = self.domain + "rooms"
     self.eq(expected_path, path)
 
+  def test_login_success(self):
+    mock_response = Mock()
+    mock_response.status_code = 200
+    mock_response.json.return_value = {"id":1, "name":"kota"}
+    self.mock_client.get.return_value = mock_response
+
+    res = self.lh.login(1)
+
+    self.true(res['status'])
+    self.eq(1, res['player']['id'])
+    self.eq('kota', res['player']['name'])
+
+  def test_login_fail(self):
+    mock_response = Mock()
+    mock_response.status_code = 404
+    self.mock_client.get.return_value = mock_response
+
+    res = self.lh.login(1)
+
+    self.false(res['status'])
+
   def test_create_player(self):
     self.lh.create_player("taro")
     path = self.mock_client.post.call_args_list[0][0][0]

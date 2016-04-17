@@ -17,7 +17,7 @@ class CustomHttpClient:
     requests_log.setLevel(logging.DEBUG)
     requests_log.propagate = True
 
-  def get(self, url, params):
+  def get(self, url, params={}):
     response = requests.get(url, json=params)
     return self.log_response(response)
 
