@@ -49,7 +49,7 @@ class MessageHandler:
     return state
 
   def enter_room(self, ws):
-    ws.send(self.pb.build_message_params("enter_room"))
+    ws.send(self.pb.build_enter_room_params())
 
   def message_subscription_is_done(self):
     print '[onMessage] your subscription request is accepted!!'

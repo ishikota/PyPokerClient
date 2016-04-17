@@ -102,7 +102,7 @@ class MessageHandlerTest(unittest.TestCase):
 
   def params_builder_mock(self):
     pb = Mock()
-    pb.build_message_params.return_value = self.mock_enter_room_msg()
+    pb.build_enter_room_params.return_value = self.mock_enter_room_msg()
     return pb
 
   def mock_enter_room_msg(self):
