@@ -1,5 +1,6 @@
 import unittest
 import json
+from mock import Mock
 
 from nose.tools import *
 from poker_client.message_handler import MessageHandler
@@ -8,11 +9,28 @@ from poker_client.params_builder import ParamsBuilder
 class MessageHandlerTest(unittest.TestCase):
 
   def setUp(self):
-    self.player_id = 53
-    self.room_id = 7
-    self.credencial = 'a' * 22
-    self.pb = ParamsBuilder(self.player_id, self.room_id, self.credencial)
+    self.pb = self.params_builder_mock()
     self.mh = MessageHandler(self.pb)
+
+  def test_switch_action_ping(self):
+    for state in range(3):
+      ws = self.websocket_spy()
+      next_state = self.mh.switch_action_by_message(self.ping(), state, ws)
+      self.assertEqual(state, next_state)
+
+  def test_retry_request_if_needed(self):
+
+    # do not retry
+    ws = self.websocket_spy()
+    self.mh.retry_request_if_needed(ws, 0)
+    self.assertEqual(ws.send.call_count, 0)
+
+    # resend expected message
+    ws = self.websocket_spy()
+    next_state = self.mh.retry_request_if_needed(ws, MessageHandler.WAITING_DOOR_OPEN)
+    self.assertEqual(ws.send.call_count, 1)
+    args = ws.send.call_args_list[0][0][0]
+    self.assertEqual(self.mock_enter_room_msg(), args)
 
   def test_type_ping(self):
     self.assertTrue(self.mh.type_ping(self.ping()))
@@ -46,6 +64,18 @@ class MessageHandlerTest(unittest.TestCase):
   def arrival(self):
     return json.loads(r'{"phase":"member_wanted", "type":"arrival", "message":"TODO"}')
 
+  def websocket_spy(self):
+    websocket = Mock()
+    websocket.send.return_value = None
+    return websocket
+
+  def params_builder_mock(self):
+    pb = Mock()
+    pb.build_message_params.return_value = self.mock_enter_room_msg()
+    return pb
+
+  def mock_enter_room_msg(self):
+    return "enter_room"
 
 if __name__ == '__main__':
   unittest.main()
