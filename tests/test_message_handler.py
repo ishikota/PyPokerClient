@@ -66,6 +66,10 @@ class MessageHandlerTest(unittest.TestCase):
     self.assertTrue(self.mh.type_player_arrival(self.arrival()["message"]))
     self.assertFalse(self.mh.type_player_arrival(self.welcome()["message"]))
 
+  def test_type_ready(self):
+    self.assertTrue(self.mh.type_ready(self.ready()["message"]))
+    self.assertFalse(self.mh.type_ready(self.arrival()["message"]))
+
   def test_forward_state(self):
     self.assertEqual(2, self.mh.forward_state(1))
     self.assertEqual(3, self.mh.forward_state(self.mh.forward_state(1)))
@@ -81,6 +85,9 @@ class MessageHandlerTest(unittest.TestCase):
 
   def arrival(self):
     return json.loads(r'{"identifier":"{\"channel\":\"RoomChannel\"}", "message" : { "phase":"member_wanted", "type":"arrival", "message":"TODO"} }')
+
+  def ready(self):
+    return json.loads(r'{"identifier":"{\"channel\":\"RoomChannel\"}", "message" : { "phase":"member_wanted", "type":"ready"} }')
 
   def websocket_spy(self):
     websocket = Mock()
