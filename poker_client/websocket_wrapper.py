@@ -8,7 +8,7 @@ class WebSocketWrapper:
     websocket.enableTrace(True)
     self.host = host
     self.state = MessageHandler.CONNECTING
-    self.pb = ParamsBuilder(room_id, player_id, credential)
+    self.pb = ParamsBuilder(player_id, room_id, credential)
     self.msg_handler = MessageHandler(self.pb)
 
   def run_forever(self):
