@@ -7,6 +7,7 @@ class MessageHandler:
   CONNECTING = 0
   WAITING_DOOR_OPEN = 1
   WAITING_PLAYER_ARRIVAL = 2
+  START_POKER = 3
 
   def __init__(self, params_builder): # pass lobby handler
     self.pb = params_builder
