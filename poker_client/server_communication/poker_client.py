@@ -17,6 +17,14 @@ def registration():
   print "Player INFO : " + str(player)
   return player
 
+def login():
+  pid = int(raw_input("Input your id >>> "))
+  res = lobby.login(pid)
+  if res['status']:
+    return res['player']
+  else:
+    raise Exception("Login failed")
+
 def create_room():
   name = raw_input("Input the name of new room >>> ")
   max_round = int(raw_input("Input the number of round to play >>> "))
@@ -43,13 +51,20 @@ def select_room():
   return int(raw_input("Input the room id which you want to enter >>> "))
 
 
-player = registration()
+player = None
+flg = raw_input("Input Login(l) or register(r) >> ")
+if flg == 'r':
+  player = registration()
+else:
+  player = login()
+
 show_rooms()
 flg = raw_input("Create new room? (y/n)")
 if flg == 'y':
   create_room()
 credential = "a" * 22  # TODO should receive when player is created
 room_id = select_room()
+
 websocket = WebSocketWrapper(ws_host, room_id, player["id"], credential)
 websocket.run_forever()
 
