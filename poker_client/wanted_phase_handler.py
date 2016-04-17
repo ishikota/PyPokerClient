@@ -1,7 +1,7 @@
 import json
 import time
 
-class MessageHandler:
+class WantedPhaseHandler:
 
   # state
   CONNECTING = 0
