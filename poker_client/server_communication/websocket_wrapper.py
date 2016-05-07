@@ -1,6 +1,7 @@
 import websocket
 from params_builder import ParamsBuilder
 from wanted_phase_handler import WantedPhaseHandler
+from poker_phase_handler import PokerPhaseHandler
 from close_handler import CloseHandler
 
 class WebSocketWrapper:
@@ -11,6 +12,7 @@ class WebSocketWrapper:
     self.state = WantedPhaseHandler.CONNECTING
     self.pb = ParamsBuilder(player_id, room_id, credential)
     self.wanted_handler = WantedPhaseHandler(self.pb)
+    self.poker_handler = PokerPhaseHandler(self.pb, None)  #TODO pass poker algorithm
     self.close_handler = CloseHandler(self.pb)
 
   def run_forever(self):
@@ -26,9 +28,7 @@ class WebSocketWrapper:
     global state
 
     if self.state >= WantedPhaseHandler.START_POKER:
-      # should pass PokerMessageHandler
-      self.close_handler.exit_room(ws)
-      ws.close()
+      self.poker_handler.on_message(self.state, ws, message)
     else:
       self.state = self.wanted_handler.on_message(self.state, ws, message)
 
