@@ -49,3 +49,15 @@ def ask_message(hole_card, valid_actions, round_state, action_histories):
       u'action_histories': action_histories
       }
 
+def hsh():
+  return { "h":"a", "s":"h" }
+
+def ary():
+  return [0] * 5
+
+def s():
+  return "hoge"
+
+def i():
+  return 53
+

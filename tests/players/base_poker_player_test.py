@@ -10,37 +10,37 @@ class BasePokerPlayerTest(BaseUnitTest):
 
 
   def test_respond_to_ask(self):
-    msg = ask_message("h", "v", "r", "a")
+    msg = ask_message(ary(), ary(), hsh(), ary)
     method = self.player.respond_to_ask
     self.__check_err(msg, method, "declare_action")
 
   def test_receive_game_start(self):
-    msg = game_start_message("g")
+    msg = game_start_message(hsh())
     method = self.player.receive_notification
     self.__check_err(msg, method, "receive_game_start_message")
 
   def test_receive_round_start(self):
-    msg = round_start_message("s", "h")
+    msg = round_start_message(ary(), ary())
     method = self.player.receive_notification
     self.__check_err(msg, method, "receive_round_start_message")
 
   def test_receive_street_start(self):
-    msg = street_start_message("s", "r")
+    msg = street_start_message(s(), hsh())
     method = self.player.receive_notification
     self.__check_err(msg, method, "receive_street_start_message")
 
   def test_receive_game_update(self):
-    msg = game_update_message("a", "r", "h")
+    msg = game_update_message(hsh(), hsh(), ary())
     method = self.player.receive_notification
     self.__check_err(msg, method, "receive_game_update_message")
 
   def test_receive_round_result(self):
-    msg = round_result_message("w", "r")
+    msg = round_result_message(ary(), hsh())
     method = self.player.receive_notification
     self.__check_err(msg, method, "receive_round_result_message")
 
   def test_receive_game_result(self):
-    msg = game_result_message("s")
+    msg = game_result_message(ary())
     method = self.player.receive_notification
     self.__check_err(msg, method, "receive_game_result_message")
 
