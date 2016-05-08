@@ -9,8 +9,8 @@ class WantedPhaseHandlerTest(BaseUnitTest):
 
   def setUp(self):
     self.pb = self.params_builder_mock()
-    self.pa = self.algo_mock()
-    self.ph = PokerPhaseHandler(self.pb, self.pa)
+    self.pp = self.poker_player_mock()
+    self.ph = PokerPhaseHandler(self.pb, self.pp)
 
   def test_switch_action_when_ask(self):
     ws = self.websocket_spy()
@@ -19,10 +19,10 @@ class WantedPhaseHandlerTest(BaseUnitTest):
 
     next_state = self.ph.switch_action_by_message(msg, state, ws)
 
-    pa_args = self.pa.receive_data.call_args_list[0][0][0]
+    ask_args = self.pp.respond_to_ask.call_args_list[0][0][0]
     ws_args = ws.send.call_args_list[0][0][0]
     self.eq(PokerPhaseHandler.PLAY_POKER, next_state)
-    self.eq(msg["message"], pa_args)
+    self.eq(msg["message"], ask_args)
     self.eq(self.mock_declare_action_msg(), ws_args)
 
   def test_switch_action_when_notification(self):
@@ -32,7 +32,7 @@ class WantedPhaseHandlerTest(BaseUnitTest):
 
     next_state = self.ph.switch_action_by_message(msg, state, ws)
 
-    pa_args = self.pa.receive_data.call_args_list[0][0][0]
+    pa_args = self.pp.receive_notification.call_args_list[0][0][0]
     self.eq(PokerPhaseHandler.PLAY_POKER, next_state)
     self.eq(msg["message"], pa_args)
     self.eq(ws.send.call_count, 0)
@@ -76,10 +76,10 @@ class WantedPhaseHandlerTest(BaseUnitTest):
     pb.build_declare_action_params.return_value = self.mock_declare_action_msg()
     return pb
 
-  def algo_mock(self):
-    algo = Mock()
-    algo.receive_data.return_value = self.mock_algo_return()
-    return algo
+  def poker_player_mock(self):
+    poker_player = Mock()
+    poker_player.respond_to_ask.return_value = self.mock_algo_return()
+    return poker_player
 
   def mock_declare_action_msg(self):
     return "declare_action"

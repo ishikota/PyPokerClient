@@ -5,9 +5,9 @@ class PokerPhaseHandler:
   # state
   PLAY_POKER = 4
 
-  def __init__(self, params_builder, poker_algorithm):
+  def __init__(self, params_builder, poker_player):
     self.pb = params_builder
-    self.pa = poker_algorithm
+    self.pp = poker_player
 
   # Return next state
   def on_message(self, state, ws, msg):
@@ -19,10 +19,10 @@ class PokerPhaseHandler:
       return self.retry_request_if_needed(ws, state)
 
     if self.type_ask(msg['message']):
-      act_data = self.pa.receive_data(msg["message"])
+      act_data = self.pp.respond_to_ask(msg["message"])
       self.declare_action(ws, act_data)
     elif self.type_notification(msg['message']):
-      self.pa.receive_data(msg["message"])
+      self.pp.receive_notification(msg["message"])
 
     return state
 
