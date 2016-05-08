@@ -20,9 +20,11 @@ class WantedPhaseHandlerTest(BaseUnitTest):
     next_state = self.ph.switch_action_by_message(msg, state, ws)
 
     ask_args = self.pp.respond_to_ask.call_args_list[0][0][0]
+    pb_args = self.pb.build_declare_action_params.call_args_list[0][0]
     ws_args = ws.send.call_args_list[0][0][0]
     self.eq(PokerPhaseHandler.PLAY_POKER, next_state)
     self.eq(msg["message"], ask_args)
+    self.eq(self.mock_algo_return(), pb_args)
     self.eq(self.mock_declare_action_msg(), ws_args)
 
   def test_switch_action_when_notification(self):
@@ -85,7 +87,9 @@ class WantedPhaseHandlerTest(BaseUnitTest):
     return "declare_action"
 
   def mock_algo_return(self):
-    return "some_action"
+    action = "fold"
+    bet_amount = 0
+    return action, bet_amount
 
 if __name__ == '__main__':
   unittest.main()

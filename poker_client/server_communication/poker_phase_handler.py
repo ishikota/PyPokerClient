@@ -19,8 +19,8 @@ class PokerPhaseHandler:
       return self.retry_request_if_needed(ws, state)
 
     if self.type_ask(msg['message']):
-      act_data = self.pp.respond_to_ask(msg["message"])
-      self.declare_action(ws, act_data)
+      action, amount = self.pp.respond_to_ask(msg["message"])
+      self.declare_action(ws, action, amount)
     elif self.type_notification(msg['message']):
       self.pp.receive_notification(msg["message"])
 
@@ -30,8 +30,8 @@ class PokerPhaseHandler:
     # TODO Implment
     return state
 
-  def declare_action(self, ws, act_data):
-    ws.send(self.pb.build_declare_action_params(act_data))
+  def declare_action(self, ws, action, amount):
+    ws.send(self.pb.build_declare_action_params(action, amount))
 
   def type_ping(self, msg):
     return msg['identifier'] == '_ping'
