@@ -19,10 +19,10 @@ class PokerPhaseHandler:
       return self.retry_request_if_needed(ws, state)
 
     if self.type_ask(msg['message']):
-      action, amount = self.pp.respond_to_ask(msg["message"])
+      action, amount = self.pp.respond_to_ask(msg["message"]["message"])
       self.declare_action(ws, action, amount)
     elif self.type_notification(msg['message']):
-      self.pp.receive_notification(msg["message"])
+      self.pp.receive_notification(msg["message"]["message"])
 
     return state
 

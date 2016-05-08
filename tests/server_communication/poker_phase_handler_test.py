@@ -23,7 +23,7 @@ class WantedPhaseHandlerTest(BaseUnitTest):
     pb_args = self.pb.build_declare_action_params.call_args_list[0][0]
     ws_args = ws.send.call_args_list[0][0][0]
     self.eq(PokerPhaseHandler.PLAY_POKER, next_state)
-    self.eq(msg["message"], ask_args)
+    self.eq(msg["message"]["message"], ask_args)
     self.eq(self.mock_algo_return(), pb_args)
     self.eq(self.mock_declare_action_msg(), ws_args)
 
@@ -36,7 +36,7 @@ class WantedPhaseHandlerTest(BaseUnitTest):
 
     pa_args = self.pp.receive_notification.call_args_list[0][0][0]
     self.eq(PokerPhaseHandler.PLAY_POKER, next_state)
-    self.eq(msg["message"], pa_args)
+    self.eq(msg["message"]["message"], pa_args)
     self.eq(ws.send.call_count, 0)
 
   def test_retry_request_if_needed(self):
