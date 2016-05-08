@@ -1,8 +1,8 @@
 import websocket
-from params_builder import ParamsBuilder
-from wanted_phase_handler import WantedPhaseHandler
-from poker_phase_handler import PokerPhaseHandler
-from close_handler import CloseHandler
+from server_communication.params_builder import ParamsBuilder
+from server_communication.wanted_phase_handler import WantedPhaseHandler
+from server_communication.poker_phase_handler import PokerPhaseHandler
+from server_communication.close_handler import CloseHandler
 
 class WebSocketWrapper:
 

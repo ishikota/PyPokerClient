@@ -1,4 +1,4 @@
-from websocket_wrapper import WebSocketWrapper
+from server_communication.websocket_wrapper import WebSocketWrapper
 
 # const
 host = "ws://localhost:3000/cable"

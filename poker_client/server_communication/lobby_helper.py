@@ -1,4 +1,4 @@
-from http_client import CustomHttpClient
+from server_communication.http_client import CustomHttpClient
 
 class LobbyHelper:
 

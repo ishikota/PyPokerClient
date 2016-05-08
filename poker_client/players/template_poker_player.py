@@ -1,4 +1,4 @@
-from poker_client.players.base_poker_player import BasePokerPlayer
+from players.base_poker_player import BasePokerPlayer
 
 class TemplatePokerPlayer(BasePokerPlayer):
 

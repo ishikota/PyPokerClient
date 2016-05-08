@@ -1,8 +1,8 @@
 import json
 
-from http_client import CustomHttpClient
-from lobby_helper import LobbyHelper
-from websocket_wrapper import WebSocketWrapper
+from server_communication.http_client import CustomHttpClient
+from server_communication.lobby_helper import LobbyHelper
+from server_communication.websocket_wrapper import WebSocketWrapper
 
 http_host = 'http://localhost:3000/api/v1/'
 ws_host = "ws://localhost:3000/cable"

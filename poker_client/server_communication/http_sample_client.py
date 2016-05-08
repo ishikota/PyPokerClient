@@ -1,5 +1,5 @@
-from http_client import CustomHttpClient
-from lobby_helper import LobbyHelper
+from server_communication.http_client import CustomHttpClient
+from server_communication.lobby_helper import LobbyHelper
 
 host = 'http://localhost:3000/'
 domain = host + 'api/v1/'
