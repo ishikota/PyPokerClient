@@ -1,4 +1,4 @@
-from base_unittest import BaseUnitTest
+from tests.base_unittest import BaseUnitTest
 import json
 from nose.tools import *
 
