@@ -6,13 +6,13 @@ from close_handler import CloseHandler
 
 class WebSocketWrapper:
 
-  def __init__(self, host, room_id, player_id, credential):
+  def __init__(self, host, room_id, player_id, credential, poker_player):
     websocket.enableTrace(True)
     self.host = host
     self.state = WantedPhaseHandler.CONNECTING
     self.pb = ParamsBuilder(player_id, room_id, credential)
     self.wanted_handler = WantedPhaseHandler(self.pb)
-    self.poker_handler = PokerPhaseHandler(self.pb, None)  #TODO pass poker algorithm
+    self.poker_handler = PokerPhaseHandler(self.pb, poker_player)
     self.close_handler = CloseHandler(self.pb)
 
   def run_forever(self):

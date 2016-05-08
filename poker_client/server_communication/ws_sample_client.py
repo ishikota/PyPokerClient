@@ -7,5 +7,5 @@ if __name__ == "__main__":
   player_id = int(raw_input("player_id >> "))
   room_id = int(raw_input("room_id >> "))
   credential = "fugafuga"
-  websocket = WebSocketWrapper(host, room_id, player_id, credential)
+  websocket = WebSocketWrapper(host, room_id, player_id, credential, None)  # TODO pass player
   websocket.run_forever()
