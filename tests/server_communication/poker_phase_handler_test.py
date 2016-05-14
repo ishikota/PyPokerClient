@@ -39,6 +39,18 @@ class WantedPhaseHandlerTest(BaseUnitTest):
     self.eq(msg["message"]["message"], pa_args)
     self.eq(ws.send.call_count, 0)
 
+  def test_close_websocket_when_game_finished(self):
+    ws = self.websocket_spy()
+    msg = self.notification()
+    msg["message"]["message"]["message_type"] = 'game_result_message'
+    state = PokerPhaseHandler.PLAY_POKER
+
+    next_state = self.ph.switch_action_by_message(msg, state, ws)
+
+    self.eq(PokerPhaseHandler.FINISH_POKER, next_state)
+    self.eq(ws.send.call_count, 0)
+
+
   def test_retry_request_if_needed(self):
     pass # TODO
 
@@ -65,7 +77,7 @@ class WantedPhaseHandlerTest(BaseUnitTest):
     return json.loads(r'{"identifier":"{\"channel\":\"RoomChannel\"}", "message" : { "phase":"play_poker", "type":"ask", "message":"hoge" } }')
 
   def notification(self):
-    return json.loads(r'{"identifier":"{\"channel\":\"RoomChannel\"}", "message" : { "phase":"play_poker", "type":"notification", "message":"fuga" } }')
+    return json.loads(r'{"identifier":"{\"channel\":\"RoomChannel\"}", "message" : { "phase":"play_poker", "type":"notification", "message": { "message_type" : "hoge" } } }')
 
 
   def websocket_spy(self):

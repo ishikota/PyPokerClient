@@ -4,6 +4,7 @@ class PokerPhaseHandler:
 
   # state
   PLAY_POKER = 4
+  FINISH_POKER = 5
 
   def __init__(self, params_builder, poker_player):
     self.pb = params_builder
@@ -14,15 +15,18 @@ class PokerPhaseHandler:
     return self.switch_action_by_message(json.loads(msg), state, ws)
 
   # FIXIT doing side effect operation (message, websocket.send)
-  def switch_action_by_message(self, msg, state, ws):
-    if self.type_ping(msg):
+  def switch_action_by_message(self, data, state, ws):
+    if self.type_ping(data):
       return self.retry_request_if_needed(ws, state)
 
-    if self.type_ask(msg['message']):
-      action, amount = self.pp.respond_to_ask(msg["message"]["message"])
+    msg = data["message"]
+    if self.type_ask(msg):
+      action, amount = self.pp.respond_to_ask(msg["message"])
       self.declare_action(ws, action, amount)
-    elif self.type_notification(msg['message']):
-      self.pp.receive_notification(msg["message"]["message"])
+    elif self.type_notification(msg):
+      self.pp.receive_notification(msg["message"])
+      if msg["message"]["message_type"] == 'game_result_message':
+        state = self.FINISH_POKER
 
     return state
 
