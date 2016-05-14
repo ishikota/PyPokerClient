@@ -27,10 +27,12 @@ class WebSocketWrapper:
   def on_message(self, ws, message):
     global state
 
-    if self.state >= WantedPhaseHandler.START_POKER:
-      self.poker_handler.on_message(self.state, ws, message)
-    else:
+    if self.state < WantedPhaseHandler.START_POKER:
       self.state = self.wanted_handler.on_message(self.state, ws, message)
+    elif self.state < PokerPhaseHandler.FINISH_POKER:
+      self.state = self.poker_handler.on_message(self.state, ws, message)
+    else:
+      ws.close()
 
   def on_error(self, ws, error):
       print error
