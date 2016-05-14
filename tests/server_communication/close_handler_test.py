@@ -1,4 +1,4 @@
-from base_unittest import BaseUnitTest
+from tests.base_unittest import BaseUnitTest
 from mock import Mock
 
 from poker_client.server_communication.close_handler import CloseHandler

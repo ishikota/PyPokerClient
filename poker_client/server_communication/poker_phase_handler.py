@@ -4,25 +4,29 @@ class PokerPhaseHandler:
 
   # state
   PLAY_POKER = 4
+  FINISH_POKER = 5
 
-  def __init__(self, params_builder, poker_algorithm):
+  def __init__(self, params_builder, poker_player):
     self.pb = params_builder
-    self.pa = poker_algorithm
+    self.pp = poker_player
 
   # Return next state
   def on_message(self, state, ws, msg):
     return self.switch_action_by_message(json.loads(msg), state, ws)
 
   # FIXIT doing side effect operation (message, websocket.send)
-  def switch_action_by_message(self, msg, state, ws):
-    if self.type_ping(msg):
+  def switch_action_by_message(self, data, state, ws):
+    if self.type_ping(data):
       return self.retry_request_if_needed(ws, state)
 
-    if self.type_ask(msg['message']):
-      act_data = self.pa.receive_data(msg["message"]["data"])
-      self.declare_action(ws, act_data)
-    elif self.type_notification(msg['message']):
-      self.pa.receive_data(msg["message"]["data"])
+    msg = data["message"]
+    if self.type_ask(msg):
+      action, amount = self.pp.respond_to_ask(msg["message"])
+      self.declare_action(ws, action, amount)
+    elif self.type_notification(msg):
+      self.pp.receive_notification(msg["message"])
+      if msg["message"]["message_type"] == 'game_result_message':
+        state = self.FINISH_POKER
 
     return state
 
@@ -30,8 +34,8 @@ class PokerPhaseHandler:
     # TODO Implment
     return state
 
-  def declare_action(self, ws, act_data):
-    ws.send(self.pb.build_declare_action_params(act_data))
+  def declare_action(self, ws, action, amount):
+    ws.send(self.pb.build_declare_action_params(action, amount))
 
   def type_ping(self, msg):
     return msg['identifier'] == '_ping'

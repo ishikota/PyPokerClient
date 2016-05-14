@@ -1,16 +1,18 @@
 import websocket
-from params_builder import ParamsBuilder
-from wanted_phase_handler import WantedPhaseHandler
-from close_handler import CloseHandler
+from server_communication.params_builder import ParamsBuilder
+from server_communication.wanted_phase_handler import WantedPhaseHandler
+from server_communication.poker_phase_handler import PokerPhaseHandler
+from server_communication.close_handler import CloseHandler
 
 class WebSocketWrapper:
 
-  def __init__(self, host, room_id, player_id, credential):
+  def __init__(self, host, room_id, player_id, credential, poker_player):
     websocket.enableTrace(True)
     self.host = host
     self.state = WantedPhaseHandler.CONNECTING
     self.pb = ParamsBuilder(player_id, room_id, credential)
     self.wanted_handler = WantedPhaseHandler(self.pb)
+    self.poker_handler = PokerPhaseHandler(self.pb, poker_player)
     self.close_handler = CloseHandler(self.pb)
 
   def run_forever(self):
@@ -25,12 +27,12 @@ class WebSocketWrapper:
   def on_message(self, ws, message):
     global state
 
-    if self.state >= WantedPhaseHandler.START_POKER:
-      # should pass PokerMessageHandler
-      self.close_handler.exit_room(ws)
-      ws.close()
-    else:
+    if self.state < WantedPhaseHandler.START_POKER:
       self.state = self.wanted_handler.on_message(self.state, ws, message)
+    elif self.state < PokerPhaseHandler.FINISH_POKER:
+      self.state = self.poker_handler.on_message(self.state, ws, message)
+    else:
+      ws.close()
 
   def on_error(self, ws, error):
       print error

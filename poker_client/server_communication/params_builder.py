@@ -15,6 +15,10 @@ class ParamsBuilder:
   def build_exit_room_params(self):
     return self.build_message_params("exit_room")
 
+  def build_declare_action_params(self, action, bet_amount):
+    data = { "poker_action": action, "bet_amount": bet_amount }
+    return self.build_message_params("declare_action", data)
+
   def build_message_params(self, action, data={}):
     return self.build_my_params("message", action, data)
 
@@ -43,7 +47,8 @@ class ParamsBuilder:
       return r'\"action\" : ' + r'\"' + action + r'\" , '
 
   def build_data(self, data):
-    items = [r'\"' + key + r'\"' + ' : ' + r'\"' + val + r'\"' for key, val in data.items()]
+    parse = lambda val: r'\"' + val + r'\"' if type(val) == str else str(val)
+    items = [parse(key) + ' : ' + parse(val) for key, val in data.items()]
     params = ' , '.join(items)
     if params != '':
       params = params + ' , '

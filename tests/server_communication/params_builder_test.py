@@ -1,4 +1,4 @@
-from base_unittest import BaseUnitTest
+from tests.base_unittest import BaseUnitTest
 import json
 from nose.tools import *
 
@@ -27,6 +27,15 @@ class ParamsBuilderTest(BaseUnitTest):
     d = json.loads(p["data"])
     self.eq(p["command"], "message")
     self.eq(d["action"], "exit_room")
+
+  def test_build_declare_action_params(self):
+    action, bet_amount = "fold", 0
+    p = json.loads(self.pb.build_declare_action_params(action, bet_amount))
+    d = json.loads(p["data"])
+    self.eq(p["command"], "message")
+    self.eq(d["action"], "declare_action")
+    self.eq(d["poker_action"], action)
+    self.eq(d["bet_amount"], bet_amount)
 
   def test_build_my_params(self):
     p = json.loads(self.pb.build_my_params("c"))
