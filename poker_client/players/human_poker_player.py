@@ -64,15 +64,15 @@ class HumanPokerPlayer(BasePokerPlayer):
         bet_amount = raw_input("Input the bet_amount >> ")
         self.__check_action(action_flg, bet_amount)
         return action_flg, int(bet_amount)
-      except e:
-        print e
+      except Exception as e:
+        print e.message
 
   def __check_action(self, action_flg, bet_amount):
     if action_flg not in ["f", "c", "r", "fold", "call", "raise"]:
-      raise "You input invalid action [{0}]. Try again!!".format(action_flg)
+      raise ValueError("You input invalid action [{0}]. Try again!!".format(action_flg))
     try:
       int(bet_amount)
     except ValueError:
-      raise "You input invalid bet amount [{0}]. Try again!!".format(bet_amount)
+      raise ValueError("You input invalid bet amount [{0}]. Try again!!".format(bet_amount))
 
 
