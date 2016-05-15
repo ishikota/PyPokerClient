@@ -50,6 +50,15 @@ class WantedPhaseHandlerTest(BaseUnitTest):
     self.eq(PokerPhaseHandler.FINISH_POKER, next_state)
     self.eq(ws.send.call_count, 0)
 
+  def test_skip_duplicate_ask_message(self):
+    ws = self.websocket_spy()
+    msg = self.ask()
+    state = PokerPhaseHandler.PLAY_POKER
+    self.ph.switch_action_by_message(msg, state, ws)
+    self.ph.switch_action_by_message(msg, state, ws)
+
+    self.eq(ws.send.call_count, 1)
+    self.eq(self.ph.ask_counter, 0)
 
   def test_retry_request_if_needed(self):
     pass # TODO
@@ -74,7 +83,7 @@ class WantedPhaseHandlerTest(BaseUnitTest):
     return json.loads('{"identifier":"_ping","message":1460779289}')
 
   def ask(self):
-    return json.loads(r'{"identifier":"{\"channel\":\"RoomChannel\"}", "message" : { "phase":"play_poker", "type":"ask", "message":"hoge" } }')
+    return json.loads(r'{"identifier":"{\"channel\":\"RoomChannel\"}", "message" : { "phase":"play_poker", "type":"ask", "counter":0, "message":"hoge" } }')
 
   def notification(self):
     return json.loads(r'{"identifier":"{\"channel\":\"RoomChannel\"}", "message" : { "phase":"play_poker", "type":"notification", "message": { "message_type" : "hoge" } } }')

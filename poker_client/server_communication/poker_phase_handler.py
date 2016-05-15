@@ -9,6 +9,7 @@ class PokerPhaseHandler:
   def __init__(self, params_builder, poker_player):
     self.pb = params_builder
     self.pp = poker_player
+    self.ask_counter = -1
 
   # Return next state
   def on_message(self, state, ws, msg):
@@ -20,9 +21,10 @@ class PokerPhaseHandler:
       return self.retry_request_if_needed(ws, state)
 
     msg = data["message"]
-    if self.type_ask(msg):
+    if self.type_ask(msg) and not self.duplicate_msg_arrive(msg):
       action, amount = self.pp.respond_to_ask(msg["message"])
       self.declare_action(ws, action, amount)
+      self.ask_counter = msg["counter"]
     elif self.type_notification(msg):
       self.pp.receive_notification(msg["message"])
       if msg["message"]["message_type"] == 'game_result_message':
@@ -48,4 +50,7 @@ class PokerPhaseHandler:
 
   def forward_state(self, state):
     return state + 1
+
+  def duplicate_msg_arrive(self, msg):
+    return msg["counter"] <= self.ask_counter
 
