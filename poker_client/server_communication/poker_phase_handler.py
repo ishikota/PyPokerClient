@@ -52,5 +52,12 @@ class PokerPhaseHandler:
     return state + 1
 
   def duplicate_msg_arrive(self, msg):
-    return msg["counter"] <= self.ask_counter
+    duplicate = msg["counter"] <= self.ask_counter
+    if duplicate:
+      self.duplicate_log(msg)
+    return duplicate
+
+  def duplicate_log(self, msg):
+    print "[PokerPhaseHandler] duplicate message received"
+    print "  message = {0}".format(msg)
 
