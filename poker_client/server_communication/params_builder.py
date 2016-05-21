@@ -15,6 +15,9 @@ class ParamsBuilder:
   def build_exit_room_params(self):
     return self.build_message_params("exit_room")
 
+  def build_connection_check_params(self):
+    return self.build_message_params("connection_check")
+
   def build_declare_action_params(self, action, bet_amount):
     data = { "poker_action": action, "bet_amount": bet_amount }
     return self.build_message_params("declare_action", data)
