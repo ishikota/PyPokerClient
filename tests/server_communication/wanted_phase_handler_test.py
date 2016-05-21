@@ -11,6 +11,12 @@ class WantedPhaseHandlerTest(BaseUnitTest):
     self.pb = self.params_builder_mock()
     self.wh = WantedPhaseHandler(self.pb)
 
+  def test_switch_action_ping(self):
+    ws = self.websocket_spy()
+    next_state = self.wh.switch_action_by_message(\
+        self.ping(), self.wh.CONNECTING, ws)
+    self.eq(0, ws.send.call_count)
+
   def test_switch_action_msg_connecting(self):
     ws = self.websocket_spy()
     next_state = self.wh.switch_action_by_message(\
@@ -33,6 +39,15 @@ class WantedPhaseHandlerTest(BaseUnitTest):
         self.arrival(), self.wh.WAITING_PLAYER_ARRIVAL, ws)
 
     self.eq(self.wh.WAITING_PLAYER_ARRIVAL, next_state)
+
+  def test_switch_action_connection_check(self):
+    ws = self.websocket_spy()
+    next_state = self.wh.switch_action_by_message(\
+        self.ping(), self.wh.WAITING_PLAYER_ARRIVAL, ws)
+    args = ws.send.call_args_list[0][0][0]
+
+    self.eq(self.wh.WAITING_PLAYER_ARRIVAL, next_state)
+    self.eq(self.mock_connection_check_msg(), args)
 
   def test_switch_action_msg_ready(self):
     ws = self.websocket_spy()
@@ -102,10 +117,14 @@ class WantedPhaseHandlerTest(BaseUnitTest):
   def params_builder_mock(self):
     pb = Mock()
     pb.build_enter_room_params.return_value = self.mock_enter_room_msg()
+    pb.build_connection_check_params.return_value = self.mock_connection_check_msg()
     return pb
 
   def mock_enter_room_msg(self):
     return "enter_room"
+
+  def mock_connection_check_msg(self):
+    return "connection_check"
 
 if __name__ == '__main__':
   unittest.main()

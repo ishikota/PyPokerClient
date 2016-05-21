@@ -19,7 +19,11 @@ class WantedPhaseHandler:
   # FIXIT doing side effect operation (message, websocket.send)
   def switch_action_by_message(self, msg, state, ws):
     if self.type_ping(msg):
-      return self.retry_request_if_needed(ws, state)
+      if state == self.WAITING_PLAYER_ARRIVAL:
+        self.send_connection_check(ws)
+        return state
+      else:
+        return self.retry_request_if_needed(ws, state)
 
     elif state == self.CONNECTING:
       if self.type_confirm_subscription(msg):
@@ -40,6 +44,10 @@ class WantedPhaseHandler:
         return self.forward_state(state)
 
     return state
+
+  def send_connection_check(self, ws):
+    print "[ConnectionCheck] send connection check"
+    ws.send(self.pb.build_connection_check_params())
 
   def retry_request_if_needed(self, ws, state):
     if state == self.WAITING_DOOR_OPEN:
