@@ -29,7 +29,6 @@ class PokerPhaseHandler:
       self.declare_action(ws, action, amount)
       self.ask_counter = msg["counter"]
     elif self.type_notification(msg):
-      state = max(state, self.PLAY_POKER)
       self.pp.receive_notification(msg["message"])
       if msg["message"]["message_type"] == 'game_result_message':
         state = self.FINISH_POKER

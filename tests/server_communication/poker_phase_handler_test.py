@@ -40,7 +40,7 @@ class WantedPhaseHandlerTest(BaseUnitTest):
   def test_switch_action_when_notification(self):
     ws = self.websocket_spy()
     msg = self.notification()
-    state = PokerPhaseHandler.CONNECTION_CHECK
+    state = PokerPhaseHandler.PLAY_POKER
 
     next_state = self.ph.switch_action_by_message(msg, state, ws)
 
