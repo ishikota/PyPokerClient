@@ -3,8 +3,9 @@ import json
 class PokerPhaseHandler:
 
   # state
-  PLAY_POKER = 4
-  FINISH_POKER = 5
+  CONNECTION_CHECK = 4
+  PLAY_POKER = 5
+  FINISH_POKER = 6
 
   def __init__(self, params_builder, poker_player):
     self.pb = params_builder
@@ -18,6 +19,8 @@ class PokerPhaseHandler:
   # FIXIT doing side effect operation (message, websocket.send)
   def switch_action_by_message(self, data, state, ws):
     if self.type_ping(data):
+      if state == self.CONNECTION_CHECK:
+        self.send_connection_check(ws)
       return self.retry_request_if_needed(ws, state)
 
     msg = data["message"]
@@ -35,6 +38,9 @@ class PokerPhaseHandler:
   def retry_request_if_needed(self, ws, state):
     # TODO Implment
     return state
+
+  def send_connection_check(self, ws):
+    ws.send(self.pb.build_connection_check_params())
 
   def declare_action(self, ws, action, amount):
     ws.send(self.pb.build_declare_action_params(action, amount))
