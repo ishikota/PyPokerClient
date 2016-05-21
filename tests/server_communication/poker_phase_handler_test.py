@@ -12,16 +12,6 @@ class WantedPhaseHandlerTest(BaseUnitTest):
     self.pp = self.poker_player_mock()
     self.ph = PokerPhaseHandler(self.pb, self.pp)
 
-  def test_switch_action_connection_check(self):
-    ws = self.websocket_spy()
-    msg = self.ping()
-    state = PokerPhaseHandler.CONNECTION_CHECK
-
-    next_state = self.ph.switch_action_by_message(msg, state, ws)
-    ws_args = ws.send.call_args_list[0][0][0]
-    self.eq(PokerPhaseHandler.CONNECTION_CHECK, next_state)
-    self.eq(ws_args, self.mock_connection_check_msg())
-
   def test_switch_action_when_ask(self):
     ws = self.websocket_spy()
     msg = self.ask()
@@ -107,7 +97,6 @@ class WantedPhaseHandlerTest(BaseUnitTest):
   def params_builder_mock(self):
     pb = Mock()
     pb.build_declare_action_params.return_value = self.mock_declare_action_msg()
-    pb.build_connection_check_params.return_value = self.mock_connection_check_msg()
     return pb
 
   def poker_player_mock(self):
@@ -117,9 +106,6 @@ class WantedPhaseHandlerTest(BaseUnitTest):
 
   def mock_declare_action_msg(self):
     return "declare_action"
-
-  def mock_connection_check_msg(self):
-    return "connection_check"
 
   def mock_algo_return(self):
     action = "fold"
