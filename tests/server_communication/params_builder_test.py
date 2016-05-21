@@ -28,6 +28,12 @@ class ParamsBuilderTest(BaseUnitTest):
     self.eq(p["command"], "message")
     self.eq(d["action"], "exit_room")
 
+  def test_build_connection_check_params(self):
+    p = json.loads(self.pb.build_connection_check_params())
+    d = json.loads(p["data"])
+    self.eq(p["command"], "message")
+    self.eq(d["action"], "connection_check")
+
   def test_build_declare_action_params(self):
     action, bet_amount = "fold", 0
     p = json.loads(self.pb.build_declare_action_params(action, bet_amount))
