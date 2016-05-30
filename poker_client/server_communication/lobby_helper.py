@@ -1,5 +1,3 @@
-from server_communication.http_client import CustomHttpClient
-
 class LobbyHelper:
 
   def __init__(self, domain, http_client):
