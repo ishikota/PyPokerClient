@@ -6,12 +6,19 @@ from server_communication.websocket_wrapper import WebSocketWrapper
 
 class PokerRunner:
 
-  HTTP_HOST = 'http://localhost:3000/api/v1/'
-  WS_HOST = 'ws://localhost:3000/cable'
+  HTTP_URL_TEMPLATE = 'http://{0}:{1}/api/v1/'
+  WS_URL_TEMPLATE = 'ws://{0}:{1}/cable'
+
+  def __init__(self, host, port):
+    self.host = host
+    self.port = port
 
   def run(self, poker_player):
+    http_url = self.HTTP_URL_TEMPLATE.format(self.host, self.port)
+    ws_url = self.WS_URL_TEMPLATE.format(self.host, self.port)
+
     http_client = CustomHttpClient()
-    lobby = LobbyHelper(self.HTTP_HOST, http_client)
+    lobby = LobbyHelper(http_url, http_client)
     player_info = self.login_or_registration(lobby)
     self.show_rooms(lobby)
     self.create_room_if_needed(lobby)
@@ -19,7 +26,7 @@ class PokerRunner:
     credential = "not used now"
 
     websocket = WebSocketWrapper(
-        self.WS_HOST, room_id, player_info["id"], credential, poker_player)
+        ws_url, room_id, player_info["id"], credential, poker_player)
     websocket.run_forever()
 
   def login_or_registration(self, lobby):
