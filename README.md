@@ -9,19 +9,26 @@ git clone https://github.com/ishikota/PyPokerClient
 ```
 We assume you cloned this repository to `~/PyPokerClient` in following explanation.
 
-## 2. Add this repository to PYTHON PATH
-Add **source directory** to PYTHONPATH like below. (Not **root of this repository** !!)
+## 2. Install dependencies by pip
 ```
-export PYTHONPATH=~/poker_client/poker_client:$PYTHONPATH
+cd ~/PyPokerClient
+pip install -r requirements.txt
+```
+This poker client library uses
+- [request](https://github.com/kennethreitz/requests/) as HttpClient
+- [websocket-client](https://github.com/liris/websocket-client) as websocket client
+
+## 3. Run PokerServer [Under Construction]
+Run poker server by following this link and check its host name and port number.  
+We assume `host="localhost"`, `port=300` in following explanation.
+
+## 4. Run poker client and establish connection with PokerServer
+Here, we use sample player which included in this repository.
+You should use your own poker player if possible.
+```
+cd ~/PyPokerClient
+./script/run_client --player_path ./poker_client/players/template_poker_player.py --host localhost --port 3000
 ```
 
-## 3. Move to the root directory
-Move to the root of this repository before run client.
-```
-cd ~
-```
-
-## 4. Run test script
-**Do not forget to run PokerServer before run script!!**
-
-Under construction...
+## 5. Under Construction
+TODO
