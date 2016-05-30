@@ -11,7 +11,9 @@ import importlib
 
 # Resolve path
 root = os.path.join(os.path.dirname(__file__), "..")
-server_communication_path = os.path.join(root, "poker_client", "server_communication")
+src_path = os.path.join(root, "poker_client")
+server_communication_path = os.path.join(src_path, "server_communication")
+sys.path.append(src_path)
 sys.path.append(server_communication_path)
 import poker_runner
 parser = argparse.ArgumentParser(description="Receive path of client object")
