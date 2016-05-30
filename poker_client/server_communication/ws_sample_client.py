@@ -1,5 +1,12 @@
-from players.template_poker_player import TemplatePokerPlayer
-from players.human_poker_player import HumanPokerPlayer
+import os
+import sys
+module_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+src_root = os.path.dirname(module_root)
+sys.path.append(module_root)
+sys.path.append(src_root)
+
+from players.template_poker_player import PokerPlayer as TemplatePokerPlayer
+from players.human_poker_player import PokerPlayer as HumanPokerPlayer
 from server_communication.websocket_wrapper import WebSocketWrapper
 
 # const

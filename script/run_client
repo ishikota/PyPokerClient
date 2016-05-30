@@ -1,0 +1,40 @@
+#!/usr/bin/python
+
+'''
+HOW TO USE
+./script/run_client --player_path {PATH_TO_YOUR_POKER_PLAYER}
+'''
+import os
+import sys
+import argparse
+import importlib
+
+# Resolve path
+root = os.path.join(os.path.dirname(__file__), "..")
+src_path = os.path.join(root, "poker_client")
+server_communication_path = os.path.join(src_path, "server_communication")
+sys.path.append(src_path)
+sys.path.append(server_communication_path)
+import poker_runner
+parser = argparse.ArgumentParser(description="Receive path of client object")
+parser.add_argument("--player_path", help="path of your poker player file")
+parser.add_argument("--host", default="localhost", help="default is 'localhost'")
+parser.add_argument("--port", default=3000, help="default is 3000")
+args = parser.parse_args()
+player_path = args.player_path
+host = args.host
+port = args.port
+sys.path.append(os.path.dirname(player_path))
+player_file_name = os.path.basename(player_path)
+m = importlib.import_module(os.path.splitext(player_file_name)[0])
+
+# Generate player object
+poker_player = None
+try:
+  poker_player = m.PokerPlayer()
+except AttributeError as e:
+  raise NotImplementedError("PokerPlayer class is not found in [{0}]".format(player_path))
+
+# Run
+runner = poker_runner.PokerRunner(host=host, port=port)
+runner.run(poker_player)

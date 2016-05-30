@@ -1,6 +1,6 @@
 from players.base_poker_player import BasePokerPlayer
 
-class TemplatePokerPlayer(BasePokerPlayer):
+class PokerPlayer(BasePokerPlayer):
 
   def __init__(self):
     pass
